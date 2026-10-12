@@ -1,0 +1,52 @@
+name: prometheus
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  node_exporter:
+    image: prom/node-exporter:latest
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - /home/pisit/prometheus/grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD in .env}
+
+  nut_exporter:
+    image: druggeri/nut_exporter:latest
+    environment:
+      - NUT_EXPORTER_SERVER=192.168.0.100
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: cadvisor
+    privileged: true
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/containerd/containerd.sock:/run/containerd/containerd.sock:ro
+      - /var/lib/containerd:/var/lib/containerd:ro
+
+    ports:
+      - "9999:8080"
+
+volumes:
+  prometheus_data:
+    external: true
+    name: ae48387ff8a9b0ecfb9c0560e2a51557fc5f83605eaae2a50bbe51147ca8ce84

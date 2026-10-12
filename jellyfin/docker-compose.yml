@@ -1,0 +1,20 @@
+name: jellyfin
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    user: 1000:1000
+    network_mode: host
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    group_add:
+      - "993"
+    volumes:
+      - /home/pisit/jellyfin/config:/config
+      - /home/pisit/jellyfin/cache:/cache
+      - /home/pisit/jellyfin/transcode:/transcode
+      - /data/media:/data/media
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Bangkok

@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+
+*.save
+*.bak
+
+**/config/
+**/cache/
+**/transcode/
+**/grafana-data/
+**/backup-before-move/
